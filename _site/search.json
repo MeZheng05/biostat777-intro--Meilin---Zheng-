@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "professional interests\neducational background and experience\nHobbies"
+  },
+  {
+    "objectID": "data_analysis.html",
+    "href": "data_analysis.html",
+    "title": "data_analysis",
+    "section": "",
+    "text": "#![](pic.PNG){fig-align = “center”}"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Meilin Zheng",
+    "section": "",
+    "text": "Meilin Zheng\nI am a first-year ScM Biostatistics student at the Johns Hopkins University Bloomberg School of Public Health. I graduated from the University of New Mexico in 2023. I enjoy hiking and reading in my free time."
+  }
+]
