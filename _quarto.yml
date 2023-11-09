@@ -4,6 +4,12 @@ project:
 website:
   title: "Meilin Zheng"
   navbar:
+    right:
+      - icon: github
+        href: https://github.com/MeZheng05
+        aria-label: GitHub
+      - icon: linkedin
+        href: https://www.linkedin.com/in/meilin-zheng-2865a2241/
     left:
       - href: index.qmd
         text: Home
@@ -11,6 +17,7 @@ website:
         text: About
       - href: data_analysis.qmd
         text: Data Analysis
+   
 
 format:
   html:

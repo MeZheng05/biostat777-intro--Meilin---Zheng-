@@ -1,14 +1,30 @@
 ---
-title: "About"
-
+website:
+  title: "About"
 ---
 
+-   **Professional Interests**
 
-* *professional interests 
+    -   I am interested in bridging data with the most current public health issues. Specifically, I am interested in
 
-* educational background and experience
+-   **Educational Background and Experience**
 
+    -   Master:
 
-* Hobbies
+        -   Johns Hopkins University
+        -   Master of Science in Biostatistics
 
-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
+    -   Bachlor:
+
+        -   University of New Mexico
+        -   BS. Statistics; BA. Economics
+
+-   **Hobbies**
+
+    -   Hiking
+    -   Skiing
+    -   Music
+
+![](1.jpg){fig-align="center" width="591"}
+
+![](3.jpg){fig-align="center" width="591"}
