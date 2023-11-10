@@ -3,12 +3,15 @@ website:
   title: "About"
 ---
 
--   **Professional Interests**
+# **Professional Interests**
 
-    -   I am interested in bridging data with the most current public health issues. Specifically, I am interested in
+::: {#about-block}
+I am interested in bridging data with the most current public health issues. Specifically, I am interested in aging and Alzheimer disease. 
+:::
 
--   **Educational Background and Experience**
+# **Educational Background and Experience**
 
+::: {#about-block}
     -   Master:
 
         -   Johns Hopkins University
@@ -18,13 +21,19 @@ website:
 
         -   University of New Mexico
         -   BS. Statistics; BA. Economics
+:::
 
--   **Hobbies**
 
+
+#   **Hobbies**
+
+:::{#about-block}
     -   Hiking
     -   Skiing
     -   Music
+:::
 
-![](1.jpg){fig-align="center" width="591"}
 
-![](3.jpg){fig-align="center" width="591"}
+![](1.jpg){fig-align="center" width="661"}
+
+![](3.jpg){fig-align="center" width="663"}

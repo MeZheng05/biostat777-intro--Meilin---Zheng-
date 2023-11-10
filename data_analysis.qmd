@@ -1,5 +1,193 @@
 ---
-title: "data_analysis"
+title: "Example Analysis"
+bibliography: references.bib
 ---
 
-#\![\](pic.PNG){fig-align = "center"}
+::: callout-note
+Note that this is only a simple data analysis. This is only an illustration on wrangling, exploring the data using different packages in R (e.g. `tidyr`, `ggplot2`) and show the process and results on a quarto website. No complex model is being built.
+:::
+
+# **What is the question?**
+
+![Souce[@Zhao2021]](housing.webp){fig-align="center" width="720"}
+
+::: {#about-block}
+California housing price is always a hot topic. In this analysis example, the main question is to investigate what factors are associated with California housing price.
+:::
+
+# **Who is the intended audience?**
+
+<div>
+
+The main audience is general public who are interested in the housing market back in time in 1990.
+
+</div>
+
+# **Link to where the data come from**
+
+<div>
+
+This housing data comes from a California census in 1990. The data was first featured in the paper @PaceandBarry1997. 
+
+The version of the data being used in this analysis is a modified version on Kaggle.
+
+Please click on the [link](https://www.kaggle.com/datasets/camnugent/california-housing-prices/data) for the source of the data.
+
+</div>
+
+# **Data dictionary**
+
+<div>
+
+The data dictionary below was selected from the Kaggle Website. Please click on this [link](https://www.kaggle.com/datasets/camnugent/california-housing-prices/data) for reference.
+
+`longitude` : A measure of how far west a house is; a higher value is farther west
+
+`latitude`: A measure of how far north a house is; a higher value is farther north
+
+`age`: Median age of a house within a block; a lower number is a newer building
+
+`rooms`: Total number of rooms within a block
+
+`beds`: Total number of bedrooms within a block
+
+`pop`: Total number of people residing within a block
+
+`households`: Total number of households, a group of people residing within a home unit, for a block.
+
+`income`: Median income for households within a block of houses (measured in tens of thousands of US Dollars)
+
+`value`: Median house value for households within a block (measured in tens of thousands of US Dollars)
+
+`ocean`: Location of the house w.r.t ocean/sea
+
+</div>
+
+# **Data cleaning and Wrangling**
+
+<div>
+
+```{r, warning=FALSE, message=FALSE}
+data <- read.csv("housing.csv")
+library(dplyr)
+library(tidyr)
+```
+
+</div>
+
+```{r}
+#| column: margin
+# Structure of the original dataset
+str(data)
+```
+
+```{r}
+library(forcats)
+#renames variables
+colnames(data) <- c("logitude", "latitude", "age", "rooms", "beds", "pop", "households", "income", "value", "ocean")
+
+data %>% group_by(ocean) %>% summarise(count = n())
+#Since we only have 5 observations for island, I excluded these 5 observations
+data <- data %>% filter(ocean != "ISLAND")
+#make ocean as a factor
+data <- data %>% mutate(ocean = as.factor(ocean))
+
+#Omit NAs if there is any
+#unique(is.na(data))
+data <- data %>% drop_na()
+#create a factor for income
+data <- data %>% mutate(
+  income_fct = case_when(
+    income < 2 ~ 'below_20K',
+    income >= 2 & income <= 5 ~ 'between_20K_50K',
+    income > 5 & income <= 7.5 ~ 'between_50K_75K',
+    income > 7.5 & income <= 10 ~ 'between_75K_100K',
+    income >= 10 ~ 'above 100K'
+  ),
+  income_fct = factor(income_fct, levels = c('below_20K', 'between_20K_50K', 'between_50K_75K', 'between_75K_100K', 'above 100K')), 
+  ocean = fct_collapse(ocean, ocean_view = c('<1H OCEAN', "NEAR BAY", "NEAR OCEAN"), inland = c("INLAND")),
+  value = value/10000
+)
+```
+
+```{r}
+#| column: margin
+#Structure of data after data wranggling
+str(data)
+```
+
+# Exploration of Associations
+
+<div>
+
+```{r, warning=FALSE, message=FALSE}
+library(ggplot2)
+p1 <- ggplot(data) + geom_line(aes(x = latitude, y = value), alpha = 0.8, color = "darkolivegreen1") + theme_bw() + labs(title = "Housing Value by Latitude in California\n, 1990")
+p2 <- ggplot(data) + geom_point(aes(x = age, y = value), alpha = 0.4, color = "brown1") + theme_bw() + labs(title = "Housing Value by Housing age in\nCalifornia, 1990")
+p3 <- ggplot(data) + geom_point(aes(x = beds, y = value), alpha = 0.8, color = "darkorange") + theme_bw() + labs(title = "Housing Value by Number of Bedrooms\nin California, 1990")
+p4 <- ggplot(data) + geom_point(aes(x = pop, y = value), alpha = 0.8, color = "cornflowerblue") + theme_bw() + labs(title = "Housing Value by Population in\nCalifornia, 1990")
+p5 <- ggplot(data) + geom_line(aes(x = income, y = value), alpha = 0.8, color = "cadetblue1") + theme_bw() + labs(title = "Housing Value by Median Household\nIncome in California, 1990")
+p6 <- ggplot(data) + geom_violin(aes(x = ocean, y = value), color = "darkolivegreen4", fill = "darkolivegreen") + theme_bw() + labs(title = "Housing Value by Location to Ocean\nin California, 1990")
+library(ggpubr)
+ggarrange(p1, p2, ncol = 2)
+ggarrange(p3, p4, ncol = 2)
+ggarrange(p5, p6, ncol = 2)
+```
+
+::: callout-tip
+Housing value is shown to be positively correlated with median household income. Also, there might be a slightly negative association between latitude and housing value. Moreover, the housing value located in inland clearly has a lower value than housings which is close to or have an ocean/bay view.
+:::
+
+# More on Exploration of Associations
+
+<div>
+
+```{r}
+p <- ggplot(data) + geom_line(aes(y = value, x = income),color = "violet") + facet_wrap(.~ocean, ncol=2) + labs(title = "Value of House (in 10K) VS. Median Household Income (in 10K)\nby Location of the House", y = "Value of House (in 10K)", x = 'Median Household Income (in 10K)', subtitle = "The value of the house is highly positively associated with income, and house that has a ocean/bay\nview is slightly more valuable than house in inland.", caption = "Meilin Zheng") + theme_bw()
+p
+```
+
+```{r, message=FALSE, fig.width=9, fig.height=10}
+ggplot(data) + geom_point(aes(x = age, y = value, color = income_fct), alpha = 0.1) + geom_smooth(aes(x = age, y = value), method = lm) + facet_wrap(.~income_fct, ncol=2) + theme(panel.background = element_rect(fill = "white"), panel.grid.major = element_line(colour = "lightgrey"), plot.title = element_text(size = 18)) + labs(title = "Housing Value by the Age of House, by Different Income Level", caption="Meilin Zheng", subtitle = "Housing Value is more strongly related to housing age for subgroups which have median household\nincome between 50K and 75K and 75K to 100K.For neighborhood with median household income greater\nthan 100K, the age of the house does not seem to have impact on the value of the house.") 
+```
+
+</div>
+
+
+# Linear Regression Model 
+
+The idea of building a regression model comes from @Li2022. The model from @Li2022 is used to do prediction, which is much more complex. The model built below is only a toy example, and the model assumptions needs to be checked. 
+
+:::{#about-block}
+```{r}
+model <- lm(value ~ income + age + ocean, data)
+summary(model)
+```
+:::
+
+
+
+# Summary
+
+<div>
+In summary, through data visualization and building a simple linear regression, we explored a couple of possible factors that influence the housing price in California. For example, neighborhood median housing income is highly associated with housing price. The higher the income, the higher the housing value. This is similar to the conclusion reported by @Cohen2017 that GDP largely influence the housing price. Ocean view is another important factor that influences the housing value in California. For houses that are close to the ocean view or have a bay/ocean view, the housing price is much higher ($768836 higher on average) than the houses in inland. Interestingly, age does not influence the housing price conditioning on the subgroup with income greater than 100K. These three factors are also statistically significant. 
+
+The data is from year 1990, so it might not be able to predict the current housing price well. However, it still serves as a purpose to inform people about what are the important factors that influence housing price. 
+
+</div>
+
+::: {.column-margin}
+The Fitted Regression Model (baseline: houses with/near ocean/bay view)
+
+$$\widehat{\text{value}} = 5.5579 + 3.81423*income + 0.09789*\text{age} - 7.68836*\text{I}(\text{ocean = inland})$$
+:::
+
+::: callout-note
+The functions being used in this analysis example is written below:
+
+`dplyr`: `group_by()`, `summarise()`, `mutate()`, `filter()`, `is.na()`, `case_when()`.
+
+`tidyr`: `drop_na()`.
+
+`ggplot2`: `geom_point()`, `geom_line()`, `geom_violin()`, `geom_histogram()`, `geom_smooth()`, `facet_wrap()`, `theme()`, `labs()`...
+:::

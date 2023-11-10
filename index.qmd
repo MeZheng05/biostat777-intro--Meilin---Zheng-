@@ -1,17 +1,14 @@
 ---
-title: "Meilin Zheng"
+title: "Welcome to my website!"
 about:
   template: jolla
   image: LinLin.jpg
 ---
 
 
-Meilin Zheng
+::: {#about-block}
+Hello! I am Meilin Zheng. I am a ScM Biostatistics student at the Johns Hopkins University Bloomberg School of Public Health, intend to graduate in the spring of 2025.
 
-I am a first-year ScM Biostatistics student at the Johns Hopkins University Bloomberg School of Public Health. I was born and raised in Tianjin, China, and then moved to New Mexico in 2017. 
-
-
-
-
-
+I was born in 2001. I grew up in Tianjin, China, which is a nice small city near the coast line. I moved to New Mexico in 2017.
+:::
 
